@@ -1,0 +1,23 @@
+services:
+  db:
+    container_name: api_product
+    image: postgres:16.0-alpine
+    shm_size: 1gb
+    env_file:
+      ./env/db.env
+    volumes:
+      - ./volumes/database:/var/lib/postgresql/data
+      - ./volumes/dump/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
+    ports:
+      - "1432:5432"
+    restart: always
+  service:
+    container_name: api_service
+    restart: always
+    build: .
+    env_file:
+      - ./env/service.env
+    ports:
+      - "8200:5000"
+    depends_on:
+      - db
