@@ -21,4 +21,8 @@ RUN chmod 755 /usr/src/app
 
 USER container
 
+RUN flask --app main:app db init
+RUN flask --app main:app db migrate
+RUN flask --app main:app db upgrade
+
 CMD ["gunicorn", "-b", "0.0.0.0:5000", "--reload", "main:app", "–w", "2", "--threads", "3", "-t", "240"]
